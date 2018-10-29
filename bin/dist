@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# ATTENTION CANDIDATES: Please seriously consider rewriting this script in
+# something besides Bash.
+
+set -euo pipefail
+
+if [[ $# -ne 2 ]]; then
+  echo "usage: $0 BINARY HOSTS" >&2
+  exit 1
+fi
+
+binary=$1
+hosts=$2
+
+for f in "$binary" "$hosts"; do
+  if [[ ! -f "$f" ]]; then
+    echo "$0: $f does not exist" >&2
+    exit 1
+  fi
+done
+
+while read host; do
+  scp "$binary" "$host"
+done < "$hosts"

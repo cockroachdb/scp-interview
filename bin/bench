@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+PATH=bin:$PATH
+
+if [[ $# -ne 1 ]]; then
+  echo "usage: $0 HOSTS" >&2
+  exit 1
+fi
+
+hosts="$1"
+
+if [[ ! -f build/customdb ]]; then
+  build
+fi
+
+while IFS=: read -r machine file; do
+  ssh -n "$machine" rm -f "$file" &
+done < "$hosts"
+wait
+
+time dist build/customdb "$hosts"
+
+while IFS=: read -r machine file; do
+  ssh -n "$machine" cat "$file" | shasum -a 512 -c build/customdb.sha512 &
+done < "$hosts"
+wait

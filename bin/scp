@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if [[ "$1" == *:* ]]; then
+  exec /usr/bin/scp "$@"
+fi
+
+while ! shlock -f /tmp/scp-interview-lock -p $$; do
+  sleep 0.25
+done
+trap 'rm /tmp/scp-interview-lock' EXIT
+/usr/bin/scp -l 102400 "$@"
