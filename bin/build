@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
+mkdir -p build
 dd if=/dev/random of=build/customdb bs=1m count=150
 shasum -a 512 < build/customdb > build/customdb.sha512
