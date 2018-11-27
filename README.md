@@ -14,7 +14,7 @@ On Linux, you'll need to consult your distribution's documentation.
 You can verify that SSH is setup properly by running:
 
 ```shell
-$ ssh localhost echo "All set!"
+$ ssh localhost echo "All set"
 All set!
 ```
 
