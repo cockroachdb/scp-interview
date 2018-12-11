@@ -4,6 +4,10 @@ if [[ "$1" == *:* ]]; then
   exec /usr/bin/scp "$@"
 fi
 
+if hash flock 2>/dev/null; then
+  exec flock /tmp/scp-interview-lock /usr/bin/scp -l 102400 "$@"
+fi
+
 while ! shlock -f /tmp/scp-interview-lock -p $$; do
   sleep 0.25
 done

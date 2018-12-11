@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+bs=1m
+if [[ $(uname) = "Linux" ]]; then
+    bs=1M
+fi
+
 mkdir -p build
-dd if=/dev/random of=build/customdb bs=1m count=150
+dd if=/dev/urandom of=build/customdb "bs=$bs" count=150
 shasum -a 512 < build/customdb > build/customdb.sha512
