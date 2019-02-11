@@ -6,5 +6,5 @@ if [[ $(uname) = "Linux" ]]; then
 fi
 
 mkdir -p build
-dd if=/dev/urandom of=build/customdb "bs=$bs" count=150
+dd if=/dev/urandom of=build/customdb "bs=$bs" count=20
 shasum -a 512 < build/customdb > build/customdb.sha512

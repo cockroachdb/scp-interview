@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 
+# If we are running scp from a remote host, let it go fast.
 if [[ "$1" == *:* ]]; then
   exec /usr/bin/scp "$@"
 fi
 
+# Otherwise limit scp to 3MB/s and make sure there's only one running at once.
+
 if hash flock 2>/dev/null; then
-  exec flock /tmp/scp-interview-lock /usr/bin/scp -l 102400 "$@"
+  exec flock /tmp/scp-interview-lock /usr/bin/scp -l 16384 "$@"
 fi
 
 while ! shlock -f /tmp/scp-interview-lock -p $$; do
   sleep 0.25
 done
 trap 'rm /tmp/scp-interview-lock' EXIT
-/usr/bin/scp -l 102400 "$@"
+/usr/bin/scp -l 16384 "$@"
